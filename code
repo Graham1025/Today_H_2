@@ -1,0 +1,60 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int main()
+{
+	int N, K, temp;
+	scanf("%d %d", &N, &K);
+	getchar();
+	////小毛法,充分利用了计算机里面数字的“移位、或、与”等操作，很高级
+	/*unsigned int arr[256] = { 0 };
+	char c;
+	for (int i = 0; i < N; i++)
+	{
+		scanf("%c", &c);
+		arr[c] += 1;
+		getchar();
+	}
+	for (int i = 0; i < 256; i++)
+		if (arr[i])
+			arr[i] = arr[i] << 8 | (255 - i);
+	for (int i = 0; i < K; i++)
+		for (int j = 0; j < 256 - i - 1; j++)
+			if (arr[j]>arr[j + 1])
+			{
+				temp = arr[j];
+				arr[j] = arr[j + 1];
+				arr[j + 1] = temp;
+			}
+	for (int i = 255; i > 255 - K; i--)
+		printf("%c %d\n", 255 - (arr[i] & 0xFF), arr[i] >> 8);*/
+
+	////大毛法，思维简单，逻辑清晰，没那么绕
+	int arr[256][2] = { 0 };
+	int temp_arr[2] = { 0 };
+	char c;
+	for (int i = 0; i < N; i++)
+	{
+		scanf("%c", &c);
+		arr[c][0] += 1;
+		arr[c][1] = c;
+		getchar();
+	}
+	for (int i = 0; i < K; i++)
+		for (int j = 0; j < 256 - i - 1; j++)
+		{
+			if (arr[j][0] > arr[j + 1][0] || arr[j][0] == arr[j + 1][0] && arr[j][1] < arr[j + 1][1])
+			{
+				temp_arr[0] = arr[j][0];
+				temp_arr[1] = arr[j][1];
+				arr[j][0] = arr[j + 1][0];
+				arr[j][1] = arr[j + 1][1];
+				arr[j + 1][0] = temp_arr[0];
+				arr[j + 1][1] = temp_arr[1];
+			}
+		}
+	for (int i = 255; i > 255 - K; i--)
+		printf("%c %d\n", arr[i][1], arr[i][0]);
+	getchar();
+}
